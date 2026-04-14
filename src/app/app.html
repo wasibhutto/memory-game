@@ -1,4 +1,15 @@
+
+<!-- ================= GAME SWITCH MENU ================= -->
+<div class="menu">
+  <button (click)="gameMode.set('memory')">🃏 Memory Game</button>
+  <button (click)="gameMode.set('snake')">🐍 Snake Game</button>
+</div>
+
+<!-- ================= MEMORY GAME ================= -->
+@if(gameMode() === 'memory') {
+
 <div class="game">
+
   <h1>🃏 Memory Card Game</h1>
 
   <div class="scoreboard">
@@ -9,17 +20,24 @@
     <span>👥 Visitors: {{ visitorCount() }}</span>
   </div>
 
+  <!-- WIN SCREEN -->
   @if(matchedPairs() === 8) {
     <div class="winner">
       🎉 You Won in {{ moves() }} moves & {{ timer() }} seconds!
-      <div class="plays">🎮 Total Games Completed: {{ gamesPlayed() }}</div>
+
+      <div class="plays">
+        🎮 Total Games Completed: {{ gamesPlayed() }}
+      </div>
+
       @if(moves() === highScore()) {
         <div class="new-record">🏆 New High Score!</div>
       }
+
       <button (click)="startGame()">Play Again</button>
     </div>
   }
 
+  <!-- GAME GRID -->
   <div class="grid">
     @for(card of cards(); track $index) {
       <app-card
@@ -32,5 +50,14 @@
   </div>
 
   <button class="restart" (click)="startGame()">🔄 Restart</button>
-  <div class="credits">Made with ❤️ by Hamza❤️Ibrahim❤️Maham</div>
+
 </div>
+
+}
+
+<!-- ================= SNAKE GAME ================= -->
+@if(gameMode() === 'snake') {
+
+  <app-snake></app-snake>
+
+}

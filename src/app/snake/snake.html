@@ -1,0 +1,33 @@
+<div class="snake-game">
+  <h1>🐍 Snake Game</h1>
+
+  <div class="scoreboard">
+    <span>🎯 Score: {{ score() }}</span>
+    <span>🏆 Best: {{ highScore() }}</span>
+  </div>
+
+  @if(!gameStarted()) {
+    <div class="overlay">
+      <button (click)="startGame()">▶ Start Game</button>
+    </div>
+  }
+
+  @if(gameOver()) {
+    <div class="overlay">
+      <div class="game-over">💀 Game Over!</div>
+      <div>Score: {{ score() }}</div>
+      <button (click)="startGame()">🔄 Play Again</button>
+    </div>
+  }
+
+  <canvas #gameCanvas width="400" height="400"></canvas>
+
+  <div class="controls">
+    <div class="row"><button (click)="changeDirection('UP')">⬆</button></div>
+    <div class="row">
+      <button (click)="changeDirection('LEFT')">⬅</button>
+      <button (click)="changeDirection('DOWN')">⬇</button>
+      <button (click)="changeDirection('RIGHT')">➡</button>
+    </div>
+  </div>
+</div>
