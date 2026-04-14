@@ -56,7 +56,7 @@ export class SnakeComponent implements OnDestroy {
     this.gameStarted.set(true);
     this.placeFood();
     clearInterval(this.gameLoop);
-    this.gameLoop = setInterval(() => this.tick(), 150);
+    this.gameLoop = setInterval(() => this.tick(), 200);
   }
 
   tick() {
