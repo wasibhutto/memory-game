@@ -6,11 +6,13 @@
     <span>🎯 Moves: {{ moves() }}</span>
     <span>✅ Matched: {{ matchedPairs() }} / 8</span>
     <span>🏆 Best: {{ highScore() === 0 ? '-' : highScore() }}</span>
+    <span>👥 Visitors: {{ visitorCount() }}</span>
   </div>
 
   @if(matchedPairs() === 8) {
     <div class="winner">
       🎉 You Won in {{ moves() }} moves & {{ timer() }} seconds!
+      <div class="plays">🎮 Total Games Completed: {{ gamesPlayed() }}</div>
       @if(moves() === highScore()) {
         <div class="new-record">🏆 New High Score!</div>
       }

@@ -1,4 +1,4 @@
-import { Component, signal, effect } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from './card/card';
 
@@ -8,7 +8,7 @@ import { CardComponent } from './card/card';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   cards = signal<{ value: string; isFlipped: boolean; isMatched: boolean }[]>([]);
   flippedCards: number[] = [];
   moves = signal(0);
@@ -16,11 +16,25 @@ export class App {
   timer = signal(0);
   highScore = signal<number>(parseInt(localStorage.getItem('highScore') || '0'));
   timerInterval: any;
+  visitorCount = signal(0);
+  gamesPlayed = signal(0);
 
   emojis = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍑', '🥝', '🍉'];
 
   constructor() {
     this.startGame();
+  }
+
+  ngOnInit() {
+    fetch('https://api.countapi.xyz/hit/memory-game-hamza/visits')
+      .then(res => res.json())
+      .then(data => this.visitorCount.set(data.value));
+  }
+
+  trackGamePlayed() {
+    fetch('https://api.countapi.xyz/hit/memory-game-hamza/games-played')
+      .then(res => res.json())
+      .then(data => this.gamesPlayed.set(data.value));
   }
 
   startGame() {
@@ -72,6 +86,7 @@ export class App {
 
       if (this.matchedPairs() === 8) {
         clearInterval(this.timerInterval);
+        this.trackGamePlayed();
         this.playSound('win');
         if (this.highScore() === 0 || this.moves() < this.highScore()) {
           this.highScore.set(this.moves());
