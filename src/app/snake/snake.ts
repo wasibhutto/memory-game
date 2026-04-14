@@ -87,6 +87,7 @@ export class SnakeComponent implements OnDestroy {
     if (head.x === this.food.x && head.y === this.food.y) {
       this.score.set(this.score() + 10);
       this.placeFood();
+      this.playSound('eat');
     } else {
       this.snake.pop();
     }
@@ -101,6 +102,30 @@ export class SnakeComponent implements OnDestroy {
       x: Math.floor(Math.random() * cols),
       y: Math.floor(Math.random() * rows)
     };
+  }
+
+  playSound(type: string) {
+    const ctx = new AudioContext();
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    if (type === 'eat') {
+      oscillator.frequency.setValueAtTime(500, ctx.currentTime);
+      oscillator.frequency.setValueAtTime(700, ctx.currentTime + 0.1);
+      gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.2);
+    } else if (type === 'die') {
+      oscillator.frequency.setValueAtTime(300, ctx.currentTime);
+      oscillator.frequency.setValueAtTime(100, ctx.currentTime + 0.2);
+      gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+      oscillator.start();
+      oscillator.stop(ctx.currentTime + 0.5);
+    }
   }
 
   draw() {
@@ -139,6 +164,7 @@ export class SnakeComponent implements OnDestroy {
   endGame() {
     clearInterval(this.gameLoop);
     this.gameOver.set(true);
+    this.playSound('die');
     if (this.score() > this.highScore()) {
       this.highScore.set(this.score());
       localStorage.setItem('snakeHighScore', this.score().toString());
