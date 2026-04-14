@@ -23,4 +23,11 @@
       <app-card
         [value]="card.value"
         [isFlipped]="card.isFlipped"
-        [isMatched]="card.isM
+        [isMatched]="card.isMatched"
+        (click)="flipCard($index)">
+      </app-card>
+    }
+  </div>
+
+  <button class="restart" (click)="startGame()">🔄 Restart</button>
+</div>
