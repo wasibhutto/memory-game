@@ -23,10 +23,11 @@ export class SnakeComponent implements OnDestroy {
   private gridSize = 20;
   private gameLoop: any;
 
-  ngAfterViewInit() {
-    this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
-    this.drawInitialScreen();
-  }
+ ngAfterViewInit() {
+  this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
+  this.drawInitialScreen();
+  this.setupTouchControls();
+}
 
   @HostListener('window:keydown', ['$event'])
   handleKey(e: KeyboardEvent) {
@@ -58,6 +59,30 @@ export class SnakeComponent implements OnDestroy {
     clearInterval(this.gameLoop);
     this.gameLoop = setInterval(() => this.tick(), 200);
   }
+  private touchStartX = 0;
+private touchStartY = 0;
+
+setupTouchControls() {
+  const canvas = this.canvasRef.nativeElement;
+
+  canvas.addEventListener('touchstart', (e) => {
+    this.touchStartX = e.touches[0].clientX;
+    this.touchStartY = e.touches[0].clientY;
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - this.touchStartX;
+    const dy = e.changedTouches[0].clientY - this.touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      this.changeDirection(dx > 0 ? 'RIGHT' : 'LEFT');
+    } else {
+      this.changeDirection(dy > 0 ? 'DOWN' : 'UP');
+    }
+    e.preventDefault();
+  }, { passive: false });
+}
 
   tick() {
     this.direction = this.nextDirection;
