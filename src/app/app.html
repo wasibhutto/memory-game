@@ -1,0 +1,26 @@
+<div class="game">
+  <h1>🃏 Memory Card Game</h1>
+
+  <div class="scoreboard">
+    <span>⏱️ Time: {{ timer() }}s</span>
+    <span>🎯 Moves: {{ moves() }}</span>
+    <span>✅ Matched: {{ matchedPairs() }} / 8</span>
+    <span>🏆 Best: {{ highScore() === 0 ? '-' : highScore() }}</span>
+  </div>
+
+  @if(matchedPairs() === 8) {
+    <div class="winner">
+      🎉 You Won in {{ moves() }} moves & {{ timer() }} seconds!
+      @if(moves() === highScore()) {
+        <div class="new-record">🏆 New High Score!</div>
+      }
+      <button (click)="startGame()">Play Again</button>
+    </div>
+  }
+
+  <div class="grid">
+    @for(card of cards(); track $index) {
+      <app-card
+        [value]="card.value"
+        [isFlipped]="card.isFlipped"
+        [isMatched]="card.isM
